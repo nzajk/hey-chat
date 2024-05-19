@@ -26,19 +26,23 @@ def text_to_speech(text):
     engine.say(text)
     engine.runAndWait()
 
-while True:
-    with sr.Microphone() as mic:
-        recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-        audio = recognizer.listen(mic)
-        try:
-            text = recognizer.recognize_google(audio).lower()
-            if text in ['stop', 'stop listening', 'shut up']:
-                break
-            if text[0:7] == 'hey gpt':
-                response = response(text[8:])
-                text_to_speech(response)
-                
-            print(text)
+def main():
+    while True:
+        with sr.Microphone() as mic:
+            recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+            audio = recognizer.listen(mic)
+            try:
+                text = recognizer.recognize_google(audio).lower()
+                if text in ['stop', 'stop listening', 'shut up']:
+                    break
+                if text[0:7] == 'hey gpt':
+                    response = response(text[8:])
+                    text_to_speech(response)
 
-        except sr.UnknownValueError:
-            recognizer = sr.Recognizer()
+                # print(text) # for testing purposes
+
+            except sr.UnknownValueError:
+                recognizer = sr.Recognizer()
+                text_to_speech("Sorry, I didn't catch that. Can you repeat?")
+
+main()
